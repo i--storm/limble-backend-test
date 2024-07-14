@@ -31,9 +31,22 @@ describe("GET /", () => {
     it("Should return Hello!", async () => {
         const res = await request(process.env["API_HOST"]).get("/");
         expect(res.statusCode).toBe(200);
-        //expect(res.body.length).toBeGreaterThan(0);
+        //
         //console.log(res)
         //expect(res.body).toBe({});
         expect(res.text).toBe("Hello!");
+    });
+});
+
+describe("POST /tasks/worker", () => {
+    it("Should return JSON of Taksk", async () => {
+        const res = await request(process.env["API_HOST"]).post("/tasks/worker").send({
+            "is_complete": null,
+            "location_ids": [],
+            "worker_ids": [],
+        }).set('Content-Type', 'application/json');
+        expect(res.statusCode).toBe(200);
+        //expect(res.body.length).toBeGreaterThan(0);
+        expect(res.body.result).toBe("OK");
     });
 });
