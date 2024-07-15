@@ -1,6 +1,9 @@
 import express from "express";
 import * as mariadb from "mariadb";
 import bodyParser from "body-parser";
+import { Validator } from '@oneisland/validator';
+
+
 
 BigInt.prototype.toJSON = function() { return this.toString() }
 
@@ -99,6 +102,28 @@ async function getTasks(params){
 
 }
 
+class ParamsValidator{
+  constructor(params) {
+
+    const { validate, validateArray } = new Validator('ParamsValidator');
+
+    validateArray(params.location_ids, 'Number');
+
+    validateArray(params.worker_ids, 'Number');
+
+    validate({params}, (v)=>{
+      return v !== undefined && ( v===true || v===false)
+    }, "is_complete should be [null|true|false]");
+
+    this.values = params;
+
+  }
+}
+
+function validateParams(data){
+  let {values} = new ParamsValidator(data);
+}
+
 async function main() {
   await connect();
 
@@ -109,6 +134,8 @@ async function main() {
   app.post("/tasks/worker", (req,res)=> {
 
     let params = req.body;
+    validateParams(params);
+
     params["endpoint"] = "worker";
     getTasks(params).then((tasks)=>{
 
@@ -130,6 +157,8 @@ async function main() {
   app.post("/tasks/location", (req,res) => {
 
     let params = req.body;
+    validateParams(params);
+
     params["endpoint"] = "location";
     getTasks(params).then((tasks)=>{
 
