@@ -1,1 +1,2 @@
 - tests
+- locatios, workers lists in response

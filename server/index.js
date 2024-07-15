@@ -12,6 +12,7 @@ const port = 3000;
 let db;
 
 app.use( bodyParser.json() );
+app.use(express.static('public'))
 
 async function connect() {
   console.info("Connecting to DB...");

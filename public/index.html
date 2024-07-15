@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pie Chart</title>
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
+</head>
+<body>
+    <div id="myDiv"></div>
+    <script type="text/javascript">
+        fetch("http://127.0.0.1:3000/tasks/worker", {
+            method: "POST",
+            body: JSON.stringify({
+                "is_complete": null,
+                "location_ids": [],
+                "worker_ids": []
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        }).then((response) => response.json())
+            .then((json) => {
+                console.log(json)
+
+
+
+                var data = {
+                    values: [],
+                    labels: [],
+                    type: 'pie',
+                    title: "Workers"
+                };
+
+                for(var i=0; i<json.tasks.length; i++){
+                    data.values.push(parseInt(json.tasks[i].cost));
+                    data.labels.push(json.tasks[i].username);
+                }
+
+                /*var data = [{
+                    values: [19, 26, 5],
+                    labels: ['Residential', 'Non-Residential', 'Utility'],
+                    type: 'pie'
+                }];*/
+
+                var layout = {
+                    height: 400,
+                    width: 500
+                };
+
+                Plotly.newPlot('myDiv', [data], layout);
+
+            })
+        ;
+    </script>
+</body>
+</html>
