@@ -29,7 +29,7 @@ async function connect() {
 
 /**
  * @param params
- *    is_complete: [true|false|null>]
+ *    is_complete: [true|false|null]
  *    location_ids: [[location_id, location_id, ... location_id]]
  *    worker_ids: [[worker_id, worker_id, ... worker_id]]
  *    endpoint: ["location"|"worker"]
@@ -62,7 +62,7 @@ async function getTasks(params){
             params.is_complete !== undefined && params.is_complete !== null ? "t.is_complete = "+db.escape(params.is_complete):"" //let is_complete_query =
         ];
 
-        let prefix_query = "SELECT "+select+", SUM(lt.time_seconds/60 * w.hourly_wage) AS cost \
+        let prefix_query = "SELECT "+select+", SUM(lt.time_seconds/3600 * w.hourly_wage) AS cost \
             , COUNT(DISTINCT t.id) AS tasks_cnt, "+counter+" \
             , GROUP_CONCAT(lt.id) AS logged_time_ids, GROUP_CONCAT(t.id) AS task_ids, GROUP_CONCAT(DISTINCT l.id) AS location_ids, GROUP_CONCAT(DISTINCT w.id) AS worker_ids\
             FROM logged_time lt \
