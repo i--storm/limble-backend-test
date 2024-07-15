@@ -107,12 +107,13 @@ class ParamsValidator{
 
     const { validate, validateArray } = new Validator('ParamsValidator');
 
-    validateArray(params.location_ids, 'Number');
+    validateArray(params.location_ids, 'Number', "location_ids should be array of integers");
 
-    validateArray(params.worker_ids, 'Number');
+    validateArray(params.worker_ids, 'Number', "location_ids should be array of integers");
 
-    validate({params}, (v)=>{
-      return v !== undefined && ( v===true || v===false)
+    validate({ params }, (v)=>{
+      let val = v.is_complete !== undefined && ( v.is_complete===true || v.is_complete===false || v.is_complete===null)
+      return val
     }, "is_complete should be [null|true|false]");
 
     this.values = params;
@@ -134,7 +135,18 @@ async function main() {
   app.post("/tasks/worker", (req,res)=> {
 
     let params = req.body;
-    validateParams(params);
+    try {
+      validateParams(params);
+    }catch(e){
+      if ((e instanceof TypeError)) {
+        console.log("Validation ERROR: "+e.message)
+        res.send(JSON.stringify({
+          "result": "VALIDATION_ERROR"
+        }));
+        return;
+      }
+      throw e;
+    }
 
     params["endpoint"] = "worker";
     getTasks(params).then((tasks)=>{
