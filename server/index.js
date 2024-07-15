@@ -2,6 +2,8 @@ import express from "express";
 import * as mariadb from "mariadb";
 import bodyParser from "body-parser";
 
+BigInt.prototype.toJSON = function() { return this.toString() }
+
 const app = express();
 const port = 3000;
 let db;
@@ -30,44 +32,70 @@ async function connect() {
  *    is_complete: [true|false|null>]
  *    location_ids: [[location_id, location_id, ... location_id]]
  *    worker_ids: [[worker_id, worker_id, ... worker_id]]
- *    group_by: ["location"|"worker"]
+ *    endpoint: ["location"|"worker"]
  * @returns {Promise<void>}
  */
 async function getTasks(params){
-
-
       let select = null;
       let group_by = null;
-      if (params.group_by === "location"){
-        select = "workers";
+      let counter = null;
+
+      if (params.endpoint === "location"){
+        select = "l.*";
         group_by = "l.id"
-      } else if(params.group_by === "worker"){
-        select = "locations";
+        counter = "COUNT(DISTINCT w.id) AS workers_cnt"
+      } else if(params.endpoint === "worker"){
+        select = "w.*";
         group_by = "w.id"
+        counter = "COUNT(DISTINCT l.id) AS locations_cnt"
       }else{
         reject("Parameter group_by is required");
       }
 
+      let res = null;
+
       try{
-        let res = await db.query('SELECT ?, SUM(lt.time_seconds/60 * w.hourly_wage) AS cost FROM logged_time lt' +
-            'LEFT JOIN tasks t ON lt.task_id = t.id' +
-            'LEFT JOIN workers w ON lt.worker_id = w.id' +
-            'LEFT JOIN locations l ON t.location_id = l.id' +
-            'WHERE w.id IN (?)' +
-            'AND l.id IN (?)' +
-            //'AND ' + TODO: is_complete
-            'GROUP BY ?',
-            [select, params.worker_ids, params.location_ids, group_by]);
+
+        let where = [
+            params.worker_ids !== undefined && params.worker_ids.length > 0 ? "w.id IN ("+db.escape(params.worker_ids)+")":"" , //let workers_query =
+            params.location_ids !== undefined && params.location_ids.length > 0 ? "l.id IN ("+db.escape(params.location_ids)+")":"", //let location_query =
+            params.is_complete !== undefined && params.is_complete !== null ? "t.is_complete = "+db.escape(params.is_complete):"" //let is_complete_query =
+        ];
+
+        let prefix_query = "SELECT "+select+", SUM(lt.time_seconds/60 * w.hourly_wage) AS cost \
+            , COUNT(DISTINCT t.id) AS tasks_cnt, "+counter+" \
+            , GROUP_CONCAT(lt.id) AS logged_time_ids, GROUP_CONCAT(t.id) AS task_ids, GROUP_CONCAT(DISTINCT l.id) AS location_ids, GROUP_CONCAT(DISTINCT w.id) AS worker_ids\
+            FROM logged_time lt \
+            LEFT JOIN tasks t ON lt.task_id = t.id \
+            LEFT JOIN workers w ON lt.worker_id = w.id \
+            LEFT JOIN locations l ON t.location_id = l.id \
+            WHERE ";
+
+        let postfix_query = "GROUP BY "+group_by;
+
+        let query = prefix_query;
+
+        let is_and = false;
+        for(let i=0; i<where.length; i++){
+          if(where[i] !== ""){
+            query += (is_and? "AND ":"") + where[i]+" ";
+            is_and = true;
+          }
+        }
+        if(is_and === false){
+          query += "1 ";
+        }
+
+        query += postfix_query;
+
+        res = await db.query(query);
+
       }catch (err) {
         console.error("Error in query", err);
         throw err;
       }
 
-
-        //resolve(params.group_by);
-        //reject("some error")
-
-
+    return res;
 
 }
 
@@ -78,16 +106,15 @@ async function main() {
     res.send("Hello!");
   });
 
-  app.post("/tasks/worker", async (req,res)=> {
+  app.post("/tasks/worker", (req,res)=> {
 
     let params = req.body;
-    params["group_by"] = "worker";
+    params["endpoint"] = "worker";
     getTasks(params).then((tasks)=>{
 
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify({
         "result": "OK",
-        "group_by": result,
         "tasks": tasks
       }));
 
@@ -101,6 +128,23 @@ async function main() {
   })
 
   app.post("/tasks/location", (req,res) => {
+
+    let params = req.body;
+    params["endpoint"] = "location";
+    getTasks(params).then((tasks)=>{
+
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify({
+        "result": "OK",
+        "tasks": tasks
+      }));
+
+    }).catch((err)=>{
+      console.error(err);
+      res.send(JSON.stringify({
+        "result": "ERROR"
+      }));
+    });
 
   })
 
