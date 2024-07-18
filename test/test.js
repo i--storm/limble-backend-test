@@ -29,7 +29,7 @@ afterEach(async () => {
 });
 
 describe("GET /", () => {
-    it("Should return Hello!", async () => {
+    it("Should return 'Pie Chart'!", async () => {
         const res = await request(process.env["API_HOST"]).get("/");
         expect(res.statusCode).toBe(200);
         //
@@ -40,7 +40,7 @@ describe("GET /", () => {
 });
 
 describe("GET /get/workers", () => {
-    it("Should return JSON of Taksk", async () => {
+    it("Should return JSON of workers", async () => {
         const res = await request(process.env["API_HOST"]).get("/get/workers").send({
             "is_complete": null,
             "location_ids": [],
@@ -48,12 +48,12 @@ describe("GET /get/workers", () => {
         }).set('Content-Type', 'application/json');
         expect(res.statusCode).toBe(200);
         expect(res.text.length).toBeGreaterThan(0);
-
+        expect(JSON.parse(res.text).length).toBeGreaterThan(0);
     });
 });
 
 describe("GET /get/locations", () => {
-    it("Should return JSON of Taksk", async () => {
+    it("Should return JSON of locations", async () => {
         const res = await request(process.env["API_HOST"]).get("/get/locations").send({
             "is_complete": null,
             "location_ids": [],
@@ -61,32 +61,30 @@ describe("GET /get/locations", () => {
         }).set('Content-Type', 'application/json');
         expect(res.statusCode).toBe(200);
         expect(res.text.length).toBeGreaterThan(0);
-
+        expect(JSON.parse(res.text).length).toBeGreaterThan(0);
     });
 });
 
 describe("POST /tasks/worker", () => {
-    it("Should return JSON of Taksk", async () => {
+    it("Should return JSON of Tasks", async () => {
         const res = await request(process.env["API_HOST"]).post("/tasks/worker").send({
             "is_complete": null,
             "location_ids": [],
             "worker_ids": [],
         }).set('Content-Type', 'application/json');
         expect(res.statusCode).toBe(200);
-        //expect(res.body.length).toBeGreaterThan(0);
         expect(res.body.result).toBe("OK");
     });
 });
 
 describe("POST /tasks/location", () => {
-    it("Should return JSON of Taksk", async () => {
+    it("Should return JSON of Tasks", async () => {
         const res = await request(process.env["API_HOST"]).post("/tasks/worker").send({
             "is_complete": null,
             "location_ids": [],
             "worker_ids": [],
         }).set('Content-Type', 'application/json');
         expect(res.statusCode).toBe(200);
-        //expect(res.body.length).toBeGreaterThan(0);
         expect(res.body.result).toBe("OK");
     });
 });
