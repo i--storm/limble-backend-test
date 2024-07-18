@@ -34,10 +34,20 @@ createApp({
             this.locations = res.data;
         },
         async getWorkersPie(){
+            console.log("getWorkersPie")
+
+            let worker_ids = [];
+
+            for(let i=0; i<this.workers.length; i++){
+                if(this.workers[i].is_checked === true) {
+                    worker_ids.push(this.workers[i].id);
+                }
+            }
+
             let res = await axios.post('/tasks/worker',{
                 "is_complete": null,
                 "location_ids": [],
-                "worker_ids": []
+                "worker_ids": worker_ids
             });
 
             var data = {

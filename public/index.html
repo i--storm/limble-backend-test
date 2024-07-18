@@ -17,7 +17,7 @@
                     <h3>Workers</h3>
                     <ul>
                         <li v-for="worker in workers" :key="worker.id">
-                            <input type="checkbox" v-bind="{ id: 'w_w_cb_'+ worker.id }" v-model="worker.is_checked">
+                            <input type="checkbox" v-bind="{ id: 'w_w_cb_'+ worker.id }" v-model="worker.is_checked" v-on:change="getWorkersPie()">
                             <label v-bind="{ for: 'w_w_cb_'+ worker.id }" >{{ worker.username }}</label>
                         </li>
                     </ul>
