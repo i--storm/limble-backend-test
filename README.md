@@ -34,3 +34,12 @@ by bringing the DB container down:
 ```bash
 docker compose down
 ```
+
+## Run tests
+```
+docker exec -it $(docker ps | grep server | awk '{print $1}') bash -c "cd /test && npm i && npm test"
+```
+
+## Run demo
+
+Open http://127.0.0.1:3000/index.html in browser

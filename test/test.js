@@ -15,6 +15,7 @@ async function connect() {
     const conn = await db.getConnection();
     try {
         await conn.query("SELECT 1");
+        console.info("DB Connected!!!");
     } finally {
         await conn.end();
     }

@@ -35,6 +35,8 @@ services:
     user: node
     volumes:
       - "./server/:/code"
+      - "./public/:/code/public"
+      - "./test/:/test"
     ports:
       - "0.0.0.0:3000:3000"
     environment:
@@ -42,6 +44,7 @@ services:
       DATABASE_USER: limble-test
       DATABASE_PASSWORD: limble-test-password
       DATABASE_NAME: limble
+      API_HOST: localhost:3000
     depends_on:
       db:
         condition: service_healthy
