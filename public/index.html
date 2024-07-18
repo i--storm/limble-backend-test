@@ -4,37 +4,66 @@
     <meta charset="UTF-8">
     <title>Pie Chart</title>
     <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-    <div  style="width: 50%;float: left">
-        <div id="pie_workers"></div>
-        <div class="filers">
-            <div class="filter filter_workers">
-                <h3>Workers</h3>
-                <ul>
-                    <li>
-                        <input type="checkbox" id="w_cb_1">
-                        <label for="w_cb_1">Label</label>
-                    </li>
-                </ul>
-            </div>
-            <div class="filter filter_locations">
-                <h3>Locations</h3>
-                <ul>
-                    <li>
-                        <input type="checkbox" id="w_cb_1">
-                        <label for="w_cb_1">Label</label>
-                    </li>
-                </ul>
+    <div id="app">
+        <div  style="width: 50%;float: left">
+            <div id="pie_workers"></div>
+            <div class="filers">
+                <div class="filter filter_workers">
+                    <h3>Workers</h3>
+                    <ul>
+                        <li v-for="worker in workers" :key="worker.id">
+                            <input type="checkbox" v-bind="{ id: 'w_cb_'+ worker.id }">
+                            <label v-bind="{ for: 'w_cb_'+ worker.id }" >{{ worker.name }}</label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="filter filter_locations">
+                    <h3>Locations</h3>
+                    <ul>
+                       <!-- <li>
+                            <input type="checkbox" id="w_cb_1">
+                            <label for="w_cb_1">Label</label>
+                        </li>-->
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
-    <div  style="width: 50%;float: left">
-        <div id="pie_locations"></div>
+        <div  style="width: 50%;float: left">
+            <div id="pie_locations"></div>
+        </div>
     </div>
 
     <script type="text/javascript" src="scripts.js"></script>
+    <script>
+        const { createApp, ref } = Vue
+
+        createApp({
+            data() {
+                let workers = [{id:1, name:'w1'},{id:2, name:'w2'}]
+                return {
+                    workers
+                }
+            },
+            onMounted() {
+                this.data
+            },
+            setup() {
+                const message = ref('Hello vue!')
+                return {
+                    message
+                }
+            },
+            methods: {
+                async getPosts() {
+                    this.posts = await axios.get('/api/posts')
+                }
+            }
+        }).mount('#app')
+    </script>
 </body>
 </html>
