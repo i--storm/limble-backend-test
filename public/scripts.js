@@ -5,8 +5,10 @@ createApp({
         return {
             w_workers: [],
             w_locations: [],
+            w_is_complete: "",
             l_workers: [],
             l_locations: [],
+            l_is_complete: "",
         }
     },
     beforeMount() {
@@ -45,6 +47,7 @@ createApp({
 
             let worker_ids = [];
             let location_ids = [];
+            let is_complete = null;
 
             for(let i=0; i<this.w_workers.length; i++){
                 if(this.w_workers[i].is_checked === true) {
@@ -58,8 +61,14 @@ createApp({
                 }
             }
 
+            if(this.w_is_complete === "0"){
+                is_complete = false;
+            }else if(this.w_is_complete === "1"){
+                is_complete = true;
+            }
+
             let res = await axios.post('/tasks/worker',{
-                "is_complete": null,
+                "is_complete": is_complete,
                 "location_ids": location_ids,
                 "worker_ids": worker_ids
             });
@@ -98,6 +107,7 @@ createApp({
 
             let worker_ids = [];
             let location_ids = [];
+            let is_complete = null;
 
             for(let i=0; i<this.l_workers.length; i++){
                 if(this.l_workers[i].is_checked === true) {
@@ -111,8 +121,14 @@ createApp({
                 }
             }
 
+            if(this.w_is_complete === "0"){
+                is_complete = false;
+            }else if(this.w_is_complete === "1"){
+                is_complete = true;
+            }
+
             let res = await axios.post('/tasks/location',{
-                "is_complete": null,
+                "is_complete": is_complete,
                 "location_ids": location_ids,
                 "worker_ids": worker_ids
             });

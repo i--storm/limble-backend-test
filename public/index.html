@@ -31,6 +31,25 @@
                         </li>
                     </ul>
                 </div>
+                <div class="filter filter_locations">
+                    <h3>Is Complete</h3>
+                    <ul>
+
+                            <div>
+                                <input type="radio" id="w_r_null" v-model="w_is_complete" value="" v-on:change="getWorkersPie()">
+                                <label for="w_r_null">null</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="w_r_false" v-model="w_is_complete" value="0" v-on:change="getWorkersPie()">
+                                <label for="w_r_null">false</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="w_r_true" v-model="w_is_complete" value="1" v-on:change="getWorkersPie()">
+                                <label for="w_r_null">true</label>
+                            </div>
+
+                    </ul>
+                </div>
             </div>
         </div>
         <div  style="width: 50%;float: left">
@@ -52,6 +71,25 @@
                             <input type="checkbox" v-bind="{ id: 'l_l_cb_'+ location.id }" v-model="location.is_checked" v-on:change="getLocationsPie()">
                             <label v-bind="{ for: 'l_l_cb_'+ location.id }" >{{ location.name }}</label>
                         </li>
+                    </ul>
+                </div>
+                <div class="filter filter_locations">
+                    <h3>Is Complete</h3>
+                    <ul>
+
+                        <div>
+                            <input type="radio" id="l_r_null" v-model="w_is_complete" value="" v-on:change="getLocationsPie()">
+                            <label for="l_r_null">null</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="l_r_false" v-model="w_is_complete" value="0" v-on:change="getLocationsPie()">
+                            <label for="l_r_null">false</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="l_r_true" v-model="w_is_complete" value="1" v-on:change="getLocationsPie()">
+                            <label for="l_r_null">true</label>
+                        </div>
+
                     </ul>
                 </div>
             </div>
