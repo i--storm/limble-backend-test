@@ -39,42 +39,6 @@
     </div>
 
     <script type="text/javascript" src="scripts.js"></script>
-    <script>
-        const { createApp, ref } = Vue
 
-        createApp({
-            data() {
-                return {
-                    workers: [],
-                    locations: []
-                }
-            },
-            beforeMount() {
-                this.getWorkers();
-                this.getLocations();
-            },
-            setup() {
-                //this.data.workers = []
-                /*return {
-                    workers
-                }*/
-            },
-            methods: {
-                async getWorkers() {
-                    let res = await axios.get('/get/workers');
-                    let workers = res.data;
-                    for(let i=0; i<workers.length; i++){
-                        workers[i]['is_checked'] = false;
-                    }
-                    this.workers = workers;
-
-                },
-                async getLocations() {
-                    let res = await axios.get('/get/locations');
-                    this.locations = res.data;
-                }
-            }
-        }).mount('#app')
-    </script>
 </body>
 </html>
