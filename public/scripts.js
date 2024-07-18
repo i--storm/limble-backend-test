@@ -3,8 +3,10 @@ const { createApp, ref } = Vue
 createApp({
     data() {
         return {
-            workers: [],
-            locations: []
+            w_workers: [],
+            w_locations: [],
+            l_workers: [],
+            l_locations: [],
         }
     },
     beforeMount() {
@@ -26,27 +28,39 @@ createApp({
             for(let i=0; i<workers.length; i++){
                 workers[i]['is_checked'] = false;
             }
-            this.workers = workers;
-
+            this.w_workers = JSON.parse(JSON.stringify(workers));
+            this.l_workers = JSON.parse(JSON.stringify(workers));
         },
         async getLocations() {
             let res = await axios.get('/get/locations');
-            this.locations = res.data;
+            let locations = res.data;
+            for(let i=0; i<locations.length; i++){
+                locations[i]['is_checked'] = false;
+            }
+            this.w_locations = JSON.parse(JSON.stringify(locations));
+            this.l_locations = JSON.parse(JSON.stringify(locations));
         },
         async getWorkersPie(){
             console.log("getWorkersPie")
 
             let worker_ids = [];
+            let location_ids = [];
 
-            for(let i=0; i<this.workers.length; i++){
-                if(this.workers[i].is_checked === true) {
-                    worker_ids.push(this.workers[i].id);
+            for(let i=0; i<this.w_workers.length; i++){
+                if(this.w_workers[i].is_checked === true) {
+                    worker_ids.push(this.w_workers[i].id);
+                }
+            }
+
+            for(let i=0; i<this.w_locations.length; i++){
+                if(this.w_locations[i].is_checked === true) {
+                    location_ids.push(this.w_locations[i].id);
                 }
             }
 
             let res = await axios.post('/tasks/worker',{
                 "is_complete": null,
-                "location_ids": [],
+                "location_ids": location_ids,
                 "worker_ids": worker_ids
             });
 
@@ -55,16 +69,20 @@ createApp({
                 labels: [],
                 type: 'pie',
                 title: "Workers",
-                textinfo: "label+percent",
+                textinfo: "label+value+percent",
                 textposition: "outside",
                 automargin: true,
                 hole: .4,
             };
 
+            let summ = 0;
             for(var i=0; i<res.data.tasks.length; i++){
                 data.values.push(parseInt(res.data.tasks[i].cost));
                 data.labels.push(res.data.tasks[i].username);
+                summ += parseInt(res.data.tasks[i].cost);
             }
+
+            data.title = data.title +" "+ summ;
 
             var layout = {
 
@@ -77,10 +95,26 @@ createApp({
         },
 
         async getLocationsPie(){
+
+            let worker_ids = [];
+            let location_ids = [];
+
+            for(let i=0; i<this.l_workers.length; i++){
+                if(this.l_workers[i].is_checked === true) {
+                    worker_ids.push(this.l_workers[i].id);
+                }
+            }
+
+            for(let i=0; i<this.l_locations.length; i++){
+                if(this.l_locations[i].is_checked === true) {
+                    location_ids.push(this.l_locations[i].id);
+                }
+            }
+
             let res = await axios.post('/tasks/location',{
                 "is_complete": null,
-                "location_ids": [],
-                "worker_ids": []
+                "location_ids": location_ids,
+                "worker_ids": worker_ids
             });
 
             var data = {
@@ -88,16 +122,20 @@ createApp({
                 labels: [],
                 type: 'pie',
                 title: "Locations",
-                textinfo: "label+percent",
+                textinfo: "label+value+percent",
                 textposition: "outside",
                 automargin: true,
                 hole: .4,
             };
 
+            let summ = 0;
             for(var i=0; i<res.data.tasks.length; i++){
                 data.values.push(parseInt(res.data.tasks[i].cost));
                 data.labels.push(res.data.tasks[i].name);
+                summ += parseInt(res.data.tasks[i].cost);
             }
+
+            data.title = data.title +" "+ summ;
 
             var layout = {
                 width: "100%",

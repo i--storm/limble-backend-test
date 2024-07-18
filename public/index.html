@@ -16,7 +16,7 @@
                 <div class="filter filter_workers">
                     <h3>Workers</h3>
                     <ul>
-                        <li v-for="worker in workers" :key="worker.id">
+                        <li v-for="worker in w_workers" :key="worker.id">
                             <input type="checkbox" v-bind="{ id: 'w_w_cb_'+ worker.id }" v-model="worker.is_checked" v-on:change="getWorkersPie()">
                             <label v-bind="{ for: 'w_w_cb_'+ worker.id }" >{{ worker.username }}</label>
                         </li>
@@ -25,8 +25,8 @@
                 <div class="filter filter_locations">
                     <h3>Locations</h3>
                     <ul>
-                        <li v-for="location in locations" :key="location.id">
-                            <input type="checkbox" v-bind="{ id: 'w_l_cb_'+ location.id }">
+                        <li v-for="location in w_locations" :key="location.id">
+                            <input type="checkbox" v-bind="{ id: 'w_l_cb_'+ location.id }" v-model="location.is_checked" v-on:change="getWorkersPie()">
                             <label v-bind="{ for: 'w_l_cb_'+ location.id }" >{{ location.name }}</label>
                         </li>
                     </ul>
@@ -35,6 +35,26 @@
         </div>
         <div  style="width: 50%;float: left">
             <div id="pie_locations"></div>
+            <div class="filers">
+                <div class="filter filter_workers">
+                    <h3>Workers</h3>
+                    <ul>
+                        <li v-for="worker in l_workers" :key="worker.id">
+                            <input type="checkbox" v-bind="{ id: 'l_w_cb_'+ worker.id }" v-model="worker.is_checked" v-on:change="getLocationsPie()">
+                            <label v-bind="{ for: 'l_w_cb_'+ worker.id }" >{{ worker.username }}</label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="filter filter_locations">
+                    <h3>Locations</h3>
+                    <ul>
+                        <li v-for="location in l_locations" :key="location.id">
+                            <input type="checkbox" v-bind="{ id: 'l_l_cb_'+ location.id }" v-model="location.is_checked" v-on:change="getLocationsPie()">
+                            <label v-bind="{ for: 'l_l_cb_'+ location.id }" >{{ location.name }}</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 
