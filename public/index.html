@@ -4,53 +4,37 @@
     <meta charset="UTF-8">
     <title>Pie Chart</title>
     <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="myDiv"></div>
-    <script type="text/javascript">
-        fetch("http://127.0.0.1:3000/tasks/worker", {
-            method: "POST",
-            body: JSON.stringify({
-                "is_complete": null,
-                "location_ids": [],
-                "worker_ids": []
-            }),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        }).then((response) => response.json())
-            .then((json) => {
-                console.log(json)
 
+    <div  style="width: 50%;float: left">
+        <div id="pie_workers"></div>
+        <div class="filers">
+            <div class="filter filter_workers">
+                <h3>Workers</h3>
+                <ul>
+                    <li>
+                        <input type="checkbox" id="w_cb_1">
+                        <label for="w_cb_1">Label</label>
+                    </li>
+                </ul>
+            </div>
+            <div class="filter filter_locations">
+                <h3>Locations</h3>
+                <ul>
+                    <li>
+                        <input type="checkbox" id="w_cb_1">
+                        <label for="w_cb_1">Label</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div  style="width: 50%;float: left">
+        <div id="pie_locations"></div>
+    </div>
 
-
-                var data = {
-                    values: [],
-                    labels: [],
-                    type: 'pie',
-                    title: "Workers"
-                };
-
-                for(var i=0; i<json.tasks.length; i++){
-                    data.values.push(parseInt(json.tasks[i].cost));
-                    data.labels.push(json.tasks[i].username);
-                }
-
-                /*var data = [{
-                    values: [19, 26, 5],
-                    labels: ['Residential', 'Non-Residential', 'Utility'],
-                    type: 'pie'
-                }];*/
-
-                var layout = {
-                    height: 400,
-                    width: 500
-                };
-
-                Plotly.newPlot('myDiv', [data], layout);
-
-            })
-        ;
-    </script>
+    <script type="text/javascript" src="scripts.js"></script>
 </body>
 </html>
