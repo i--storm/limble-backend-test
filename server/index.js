@@ -133,6 +133,16 @@ async function main() {
     res.send("Hello!");
   });
 
+  app.get("/get/workers", async (req, res) => {
+    let result = await db.query("SELECT id, username FROM workers ORDER BY id ASC");
+    res.send(JSON.stringify(result));
+  });
+
+  app.get("/get/locations", async (req, res) => {
+    let result = await db.query("SELECT id, name FROM locations ORDER BY id ASC");
+    res.send(JSON.stringify(result));
+  });
+
   app.post("/tasks/worker", (req,res)=> {
 
     let params = req.body;

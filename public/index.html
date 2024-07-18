@@ -17,18 +17,18 @@
                     <h3>Workers</h3>
                     <ul>
                         <li v-for="worker in workers" :key="worker.id">
-                            <input type="checkbox" v-bind="{ id: 'w_cb_'+ worker.id }">
-                            <label v-bind="{ for: 'w_cb_'+ worker.id }" >{{ worker.name }}</label>
+                            <input type="checkbox" v-bind="{ id: 'w_w_cb_'+ worker.id }" v-model="worker.is_checked">
+                            <label v-bind="{ for: 'w_w_cb_'+ worker.id }" >{{ worker.username }}</label>
                         </li>
                     </ul>
                 </div>
                 <div class="filter filter_locations">
                     <h3>Locations</h3>
                     <ul>
-                       <!-- <li>
-                            <input type="checkbox" id="w_cb_1">
-                            <label for="w_cb_1">Label</label>
-                        </li>-->
+                        <li v-for="location in locations" :key="location.id">
+                            <input type="checkbox" v-bind="{ id: 'w_l_cb_'+ location.id }">
+                            <label v-bind="{ for: 'w_l_cb_'+ location.id }" >{{ location.name }}</label>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -44,23 +44,34 @@
 
         createApp({
             data() {
-                let workers = [{id:1, name:'w1'},{id:2, name:'w2'}]
                 return {
-                    workers
+                    workers: [],
+                    locations: []
                 }
             },
-            onMounted() {
-                this.data
+            beforeMount() {
+                this.getWorkers();
+                this.getLocations();
             },
             setup() {
-                const message = ref('Hello vue!')
-                return {
-                    message
-                }
+                //this.data.workers = []
+                /*return {
+                    workers
+                }*/
             },
             methods: {
-                async getPosts() {
-                    this.posts = await axios.get('/api/posts')
+                async getWorkers() {
+                    let res = await axios.get('/get/workers');
+                    let workers = res.data;
+                    for(let i=0; i<workers.length; i++){
+                        workers[i]['is_checked'] = false;
+                    }
+                    this.workers = workers;
+
+                },
+                async getLocations() {
+                    let res = await axios.get('/get/locations');
+                    this.locations = res.data;
                 }
             }
         }).mount('#app')
