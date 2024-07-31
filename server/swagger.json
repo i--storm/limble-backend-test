@@ -1,5 +1,5 @@
 {
-  "openapi": "3.1.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "Limble Pie Chart API",
     "description": "This is a sample Pie Chart API",
@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000"
+      "url": "http://127.0.0.1:3000"
     }
   ],
   "tags": [
@@ -29,6 +29,20 @@
     }
   ],
   "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "generic"
+        ],
+        "summary": "Display \"Hello!\"",
+        "operationId": "index",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
     "/get/workers": {
       "get": {
         "tags": [
@@ -123,31 +137,21 @@
         "properties": {
           "is_complete": {
             "type": "boolean",
-            "example": "true|false"
+            "example": true
           },
           "location_ids": {
             "type": "array",
             "items": {
               "type": "integer"
             },
-            "example": [
-              1,
-              2,
-              3,
-              4
-            ]
+            "example": []
           },
           "worker_ids": {
             "type": "array",
             "items": {
               "type": "integer"
             },
-            "example": [
-              1,
-              2,
-              3,
-              4
-            ]
+            "example": []
           }
         }
       },
@@ -185,7 +189,7 @@
           "result": {
             "type": "string",
             "example": [
-              "OK|ERROR"
+              "OK|VALIDATION_ERROR"
             ]
           },
           "tasks": {

@@ -94,12 +94,12 @@ components:
       properties:
         is_complete:
           type: boolean
-          example: true|false
+          example: true
         location_ids:
           type: array
           items:
             type: integer
-          example: [1,2,3,4]
+          example: []
         worker_ids:
           type: array
           items:
