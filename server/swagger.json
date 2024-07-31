@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://127.0.0.1:3000"
+      "url": "http://localhost:3000"
     }
   ],
   "tags": [
@@ -101,6 +101,42 @@
         "summary": "Get tasks grouped by workers",
         "description": "",
         "operationId": "tasksWorkers",
+        "requestBody": {
+          "description": "Params to filter tasks",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PieRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PieResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/tasks/location": {
+      "post": {
+        "tags": [
+          "pie"
+        ],
+        "summary": "Get tasks grouped by locations",
+        "description": "",
+        "operationId": "tasksLocations",
         "requestBody": {
           "description": "Params to filter tasks",
           "content": {
