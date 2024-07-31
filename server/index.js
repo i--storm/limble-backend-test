@@ -2,6 +2,10 @@ import express from "express";
 import * as mariadb from "mariadb";
 import bodyParser from "body-parser";
 import { Validator } from '@oneisland/validator';
+// const swaggerUi = require('swagger-ui-express');
+// const swaggerDocument = require('./swagger.json');
+import * as swaggerUi from 'swagger-ui-express'
+import swaggerDocument from "./swagger.json" assert { type: "json" }
 
 
 
@@ -13,6 +17,7 @@ let db;
 
 app.use( bodyParser.json() );
 app.use(express.static('public'))
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 async function connect() {
   console.info("Connecting to DB...");

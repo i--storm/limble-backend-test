@@ -1,0 +1,247 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Limble Pie Chart API",
+    "description": "This is a sample Pie Chart API",
+    "version": "0.0.1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "tags": [
+    {
+      "name": "generic",
+      "description": "Supportin API endpoints",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "pie",
+      "description": "Pie chart data endpoints",
+      "externalDocs": {
+        "description": "Find out more about our store",
+        "url": "http://swagger.io"
+      }
+    }
+  ],
+  "paths": {
+    "/get/workers": {
+      "get": {
+        "tags": [
+          "generic"
+        ],
+        "summary": "Get Workers list for filter",
+        "description": "Returns workers json to use in filters",
+        "operationId": "getWorkers",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WokersList"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get/locations": {
+      "get": {
+        "tags": [
+          "generic"
+        ],
+        "summary": "Get Locations for filter",
+        "description": "Returns locations json to use in filters",
+        "operationId": "getLocations",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LocationsList"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/worker": {
+      "post": {
+        "tags": [
+          "pie"
+        ],
+        "summary": "Get tasks grouped by workers",
+        "description": "",
+        "operationId": "tasksWorkers",
+        "requestBody": {
+          "description": "Params to filter tasks",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PieRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PieResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PieRequest": {
+        "type": "object",
+        "properties": {
+          "is_complete": {
+            "type": "boolean",
+            "example": "true|false"
+          },
+          "location_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "example": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "worker_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "example": [
+              1,
+              2,
+              3,
+              4
+            ]
+          }
+        }
+      },
+      "WokersList": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "username": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LocationsList": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "user": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PieResponse": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "string",
+            "example": [
+              "OK|ERROR"
+            ]
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "cost": {
+                  "type": "number",
+                  "example": 32.777777
+                },
+                "hourly_wage": {
+                  "type": "number",
+                  "example": 10
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "location_ids": {
+                  "type": "string"
+                },
+                "locations_cnt": {
+                  "type": "integer"
+                },
+                "logged_time_ids": {
+                  "type": "string"
+                },
+                "task_ids": {
+                  "type": "string"
+                },
+                "tasks_cnt": {
+                  "type": "integer"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "worker_ids": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "PieRequest": {
+        "description": "Tasks filter",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PieRequest"
+            }
+          }
+        }
+      }
+    }
+  }
+}
