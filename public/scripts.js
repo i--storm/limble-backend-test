@@ -121,9 +121,9 @@ createApp({
                 }
             }
 
-            if(this.w_is_complete === "0"){
+            if(this.l_is_complete === "0"){
                 is_complete = false;
-            }else if(this.w_is_complete === "1"){
+            }else if(this.l_is_complete === "1"){
                 is_complete = true;
             }
 
