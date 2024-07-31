@@ -42,4 +42,8 @@ docker exec -it $(docker ps | grep server | awk '{print $1}') bash -c "cd /test 
 
 ## Run demo
 
-Open http://127.0.0.1:3000/index.html in browser
+Open http://localhost:3000/index.html in browser
+
+## Run Swagger schema
+
+Open http://localhost:3000/api-docs in browser
